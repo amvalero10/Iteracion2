@@ -1,6 +1,20 @@
 package tm;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Properties;
+
+
+
+/**
+ * Transaction Manager de la aplicacion (TM)
+ * @author am.valero10
+ *
+ */
 
 public class RotondAndesTM {
 	
@@ -42,6 +56,62 @@ public class RotondAndesTM {
 	 * conexion a la base de datos
 	 */
 	private Connection conn;
+	
+	
+	
+	/**
+	 * Metodo constructor de la clase RotondAndesMaster, esta clase modela y contiene cada una de las 
+	 * transacciones y la logica de negocios que estas conllevan.
+	 * <b>post: </b> Se crea el objeto VideoAndesTM, se inicializa el path absoluto del archivo de conexion y se
+	 * inicializa los atributos que se usan par la conexion a la base de datos.
+	 * @param contextPathP - path absoluto en el servidor del contexto del deploy actual
+	 */
+	public RotondAndesTM(String contextPathP) {
+		connectionDataPath = contextPathP + CONNECTION_DATA_FILE_NAME_REMOTE;
+		initConnectionData();
+	}
+
+	
+	
+	/**
+	 * Metodo que  inicializa los atributos que se usan para la conexion a la base de datos.
+	 * <b>post: </b> Se han inicializado los atributos que se usan par la conexion a la base de datos.
+	 */
+	private void initConnectionData() {
+		try {
+			File arch = new File(this.connectionDataPath);
+			Properties prop = new Properties();
+			FileInputStream in = new FileInputStream(arch);
+			prop.load(in);
+			in.close();
+			this.url = prop.getProperty("url");
+			this.user = prop.getProperty("usuario");
+			this.password = prop.getProperty("clave");
+			this.driver = prop.getProperty("driver");
+			Class.forName(driver);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	/**
+	 * Metodo que  retorna la conexion a la base de datos
+	 * @return Connection - la conexion a la base de datos
+	 * @throws SQLException - Cualquier error que se genere durante la conexion a la base de datos
+	 */
+	private Connection darConexion() throws SQLException {
+		System.out.println("Connecting to: " + url + " With user: " + user);
+		return DriverManager.getConnection(url, user, password);
+	}
+	
+	
+	////////////////////////////////////////
+	///////Transacciones////////////////////
+	////////////////////////////////////////
+	
+
+	//aqui van los metodos para traer los dao
 	
 	
 	
