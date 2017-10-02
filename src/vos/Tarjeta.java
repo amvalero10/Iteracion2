@@ -12,7 +12,7 @@ public class Tarjeta {
 	@JsonProperty(value="contrasenia")
 	private int contrasenia;
 	
-	@JsonProperty(value="fechaExpedicion")
+	@JsonProperty(value="fechaExpiracion")
 	private Date fechaExpiracion;
 	
 	@JsonProperty(value="tipo")
@@ -22,11 +22,11 @@ public class Tarjeta {
 	private String nombreBanco;
 	
 	public Tarjeta(@JsonProperty(value="numero")long numero, @JsonProperty(value="contrasenia")int contrasenia,
-			@JsonProperty(value="fechaExpedicion")Date fechaExpedicion, @JsonProperty(value="tipo")String tipo,
+			@JsonProperty(value="fechaExpiracion")Date fechaExpiracion, @JsonProperty(value="tipo")String tipo,
 			@JsonProperty(value="nombreBanco")String nombreBanco){
 		setNumero(numero);
 		setContrasenia(contrasenia);
-		setFechaExpiracion(fechaExpedicion);
+		setFechaExpiracion(fechaExpiracion);
 		setTipo(tipo);
 		setNombreBanco(nombreBanco);
 	}
