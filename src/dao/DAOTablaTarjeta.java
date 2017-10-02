@@ -145,7 +145,7 @@ public class DAOTablaTarjeta {
 		sql += "CONTRASENIA=" + tarjeta.getContrasenia() + ",";
 		sql += "FECHAEXPIRACION='" + tarjeta.getFechaExpiracion() +"',";
 		sql += "TIPO='" + tarjeta.getTipo() +"',";
-		sql += "NOMBREBANCO=" + tarjeta.getNombreBanco() +"'";
+		sql += "NOMBREBANCO='" + tarjeta.getNombreBanco() +"'";
 		sql += " WHERE NUMERO = " + tarjeta.getNumero();
 
 

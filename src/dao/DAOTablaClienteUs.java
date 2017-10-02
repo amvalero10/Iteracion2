@@ -147,10 +147,10 @@ public class DAOTablaClienteUs {
 
 		String sql = "INSERT INTO CLIENTEUS VALUES (";
 		sql += cliente.getId() + ",'";
-		sql += cliente.getTipoId() + "',";
-		sql += cliente.getNombre() + "',";
-		sql += cliente.getCorreo() + "',";
-		sql += cliente.getRol() + ")";
+		sql += cliente.getTipoId() + "','";
+		sql += cliente.getNombre() + "','";
+		sql += cliente.getCorreo() + "','";
+		sql += cliente.getRol() + "')";
 
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
@@ -171,9 +171,9 @@ public class DAOTablaClienteUs {
 
 		String sql = "UPDATE CLIENTEUS SET ";
 		sql += "TIPOID='" + cliente.getTipoId() + "',";
-		sql += "NOMBRE=" + cliente.getNombre();
-		sql += "CORREO=" + cliente.getCorreo();
-		sql += "ROL=" + cliente.getRol();
+		sql += "NOMBRE='" + cliente.getNombre() + "',";
+		sql += "CORREO='" + cliente.getCorreo() + "',";
+		sql += "ROL='" + cliente.getRol() + "'";
 		sql += " WHERE ID = " + cliente.getId();
 
 

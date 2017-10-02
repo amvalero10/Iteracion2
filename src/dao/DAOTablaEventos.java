@@ -117,11 +117,11 @@ public class DAOTablaEventos {
 	 */
 	public void addEvento(Evento evento) throws SQLException, Exception {
 
-		String sql = "INSERT INTO EVENTO VALUES (";
-		sql += evento.getFecha() + ",'";
+		String sql = "INSERT INTO EVENTO VALUES ('";
+		sql += evento.getFecha() + "','";
 		sql += evento.getHora() + "',";
-		sql += evento.getCantidad() + "',";
-		sql += evento.getNombre() + ")";
+		sql += evento.getCantidad() + ",'";
+		sql += evento.getNombre() + "')";
 
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
@@ -141,9 +141,9 @@ public class DAOTablaEventos {
 
 		String sql = "UPDATE EVENTO SET ";
 		sql += "FECHA='" + evento.getFecha() + "',";
-		sql += "HORA=" + evento.getHora();
+		sql += "HORA='" + evento.getHora() + "',";
 		sql += "CANTIDAD=" + evento.getCantidad();
-		sql += " WHERE NOMBRE = " + evento.getNombre();
+		sql += " WHERE NOMBRE = '" + evento.getNombre() + "'";
 		
 
 		PreparedStatement prepStmt = conn.prepareStatement(sql);

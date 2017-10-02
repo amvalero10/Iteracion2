@@ -148,10 +148,10 @@ public class DAOTablaRestauranteUs {
 
 		String sql = "INSERT INTO RESTAURANTEUS VALUES (";
 		sql += restauranteUs.getId() + ",'";
-		sql += restauranteUs.getTipoId() + "',";
-		sql += restauranteUs.getNombre() + "',";
-		sql += restauranteUs.getCorreo() + "',";
-		sql += restauranteUs.getRol() + ")";
+		sql += restauranteUs.getTipoId() + "','";
+		sql += restauranteUs.getNombre() + "','";
+		sql += restauranteUs.getCorreo() + "','";
+		sql += restauranteUs.getRol() + "')";
 
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
@@ -171,9 +171,9 @@ public class DAOTablaRestauranteUs {
 
 		String sql = "UPDATE RESTAURANTEUS SET ";
 		sql += "TIPOID='" + restauranteUs.getTipoId() + "',";
-		sql += "NOMBRE=" + restauranteUs.getNombre();
-		sql += "CORREO=" + restauranteUs.getCorreo();
-		sql += "ROL=" + restauranteUs.getRol();
+		sql += "NOMBRE='" + restauranteUs.getNombre()+ "',";
+		sql += "CORREO='" + restauranteUs.getCorreo()+ "',";
+		sql += "ROL='" + restauranteUs.getRol() + "'";
 		sql += " WHERE ID = " + restauranteUs.getId();
 
 
