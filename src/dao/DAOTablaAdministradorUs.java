@@ -1,17 +1,15 @@
 package dao;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Time;
 import java.util.ArrayList;
 
-import vos.Evento;
+import vos.AdministradorUs;
 
-public class DAOTablaEventos {
-
+public class DAOTablaAdministradorUs {
+	
 	/**
 	 * Arraylits de recursos que se usan para la ejecución de sentencias SQL
 	 */
@@ -26,11 +24,10 @@ public class DAOTablaEventos {
 	 * Metodo constructor que crea DAOVideo
 	 * <b>post: </b> Crea la instancia del DAO e inicializa el Arraylist de recursos
 	 */
-
-	public DAOTablaEventos(){
+	public DAOTablaAdministradorUs() {
 		recursos = new ArrayList<Object>();
 	}
-	
+
 	/**
 	 * Metodo que cierra todos los recursos que estan enel arreglo de recursos
 	 * <b>post: </b> Todos los recurso del arreglo de recursos han sido cerrados
@@ -45,7 +42,7 @@ public class DAOTablaEventos {
 				}
 		}
 	}
-	
+
 	/**
 	 * Metodo que inicializa la connection del DAO a la base de datos con la conexión que entra como parametro.
 	 * @param con  - connection a la base de datos
@@ -61,25 +58,26 @@ public class DAOTablaEventos {
 	 * @throws SQLException - Cualquier error que la base de datos arroje.
 	 * @throws Exception - Cualquier error que no corresponda a la base de datos
 	 */
-	public ArrayList<Evento> darEventos() throws SQLException, Exception {
-		ArrayList<Evento> eventos = new ArrayList<Evento>();
+	public ArrayList<AdministradorUs> darAdministradores() throws SQLException, Exception {
+		ArrayList<AdministradorUs> administradores = new ArrayList<AdministradorUs>();
 
-		String sql = "SELECT * FROM EVENTO";
+		String sql = "SELECT * FROM ADMINISTRADORUS";
 
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
 		ResultSet rs = prepStmt.executeQuery();
 
 		while (rs.next()) {
-			Date fecha = rs.getDate("FECHA");
-			Time hora = rs.getTime("HORA");
+			Long id = rs.getLong("ID");
+			String tipoId = rs.getString("TIPOID");
 			String nombre = rs.getString("NOMBRE");
-			Integer cantidad = rs.getInt("CANTIDAD");
-			eventos.add(new Evento(fecha, hora, cantidad, nombre));
+			String correo = rs.getString("CORREO");
+			String rol = rs.getString("ROL");
+			administradores.add(new AdministradorUs(id, tipoId, nombre, correo, rol));
 		}
-		return eventos;
+		return administradores;
 	}
-	
+
 	/**
 	 * Metodo que busca el/los videos con el nombre que entra como parametro.
 	 * @param name - Nombre de el/los videos a buscar
@@ -87,26 +85,55 @@ public class DAOTablaEventos {
 	 * @throws SQLException - Cualquier error que la base de datos arroje.
 	 * @throws Exception - Cualquier error que no corresponda a la base de datos
 	 */
-	public ArrayList<Evento> buscarEventosPorName(String name) throws SQLException, Exception {
-		ArrayList<Evento> eventos = new ArrayList<Evento>();
+	public ArrayList<AdministradorUs> buscarAdministradorPorName(String name) throws SQLException, Exception {
+		ArrayList<AdministradorUs> administradores = new ArrayList<AdministradorUs>();
 
-		String sql = "SELECT * FROM EVENTO WHERE NOMBRE ='" + name + "'";
+		String sql = "SELECT * FROM ADMINISTRADORUS WHERE NOMBRE ='" + name + "'";
 
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
 		ResultSet rs = prepStmt.executeQuery();
 
 		while (rs.next()) {
-			Date fecha = rs.getDate("FECHA");
-			Time hora = rs.getTime("HORA");
 			String nombre = rs.getString("NOMBRE");
-			Integer cantidad = rs.getInt("CANTIDAD");
-			eventos.add(new Evento(fecha, hora, cantidad, nombre));
+			Long id = rs.getLong("ID");
+			String tipoId = rs.getString("TIPOID");
+			String correo = rs.getString("CORREO");
+			String rol = rs.getString("ROL");
+			administradores.add(new AdministradorUs(id, tipoId, nombre, correo, rol));
 		}
-
-		return eventos;
+		return administradores;
 	}
 	
+	/**
+	 * Metodo que busca el video con el id que entra como parametro.
+	 * @param name - Id de el video a buscar
+	 * @return Video encontrado
+	 * @throws SQLException - Cualquier error que la base de datos arroje.
+	 * @throws Exception - Cualquier error que no corresponda a la base de datos
+	 */
+	public AdministradorUs buscarAdministradorPorId(Long id) throws SQLException, Exception 
+	{
+		AdministradorUs administrador = null;
+
+		String sql = "SELECT * FROM ADMINISTRADORUS WHERE ID =" + id;
+
+		PreparedStatement prepStmt = conn.prepareStatement(sql);
+		recursos.add(prepStmt);
+		ResultSet rs = prepStmt.executeQuery();
+
+		if(rs.next()) {
+			String nombre = rs.getString("NOMBRE");
+			Long id2 = rs.getLong("ID");
+			String tipoId = rs.getString("TIPOID");
+			String correo = rs.getString("CORREO");
+			String rol = rs.getString("ROL");
+			administrador = new AdministradorUs(id2, tipoId, nombre, correo, rol);
+		}
+
+		return administrador;
+	}
+
 	/**
 	 * Metodo que agrega el video que entra como parametro a la base de datos.
 	 * @param video - el video a agregar. video !=  null
@@ -115,13 +142,14 @@ public class DAOTablaEventos {
 	 * @throws SQLException - Cualquier error que la base de datos arroje. No pudo agregar el video a la base de datos
 	 * @throws Exception - Cualquier error que no corresponda a la base de datos
 	 */
-	public void addEvento(Evento evento) throws SQLException, Exception {
+	public void addAdministrador(AdministradorUs administradorUs) throws SQLException, Exception {
 
-		String sql = "INSERT INTO EVENTO VALUES (";
-		sql += evento.getFecha() + ",'";
-		sql += evento.getHora() + "',";
-		sql += evento.getCantidad() + "',";
-		sql += evento.getNombre() + ")";
+		String sql = "INSERT INTO ADMINISTRADORUS VALUES (";
+		sql += administradorUs.getId() + ",'";
+		sql += administradorUs.getTipoId() + "',";
+		sql += administradorUs.getNombre() + "',";
+		sql += administradorUs.getCorreo() + "',";
+		sql += administradorUs.getRol() + ")";
 
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
@@ -137,20 +165,20 @@ public class DAOTablaEventos {
 	 * @throws SQLException - Cualquier error que la base de datos arroje. No pudo actualizar el video.
 	 * @throws Exception - Cualquier error que no corresponda a la base de datos
 	 */
-	public void updateEvento(Evento evento) throws SQLException, Exception {
+	public void updateAdministrador(AdministradorUs administrador) throws SQLException, Exception {
 
-		String sql = "UPDATE EVENTO SET ";
-		sql += "FECHA='" + evento.getFecha() + "',";
-		sql += "HORA=" + evento.getHora();
-		sql += "CANTIDAD=" + evento.getCantidad();
-		sql += " WHERE NOMBRE = " + evento.getNombre();
-		
+		String sql = "UPDATE CLIENTEUS SET ";
+		sql += "TIPOID='" + administrador.getTipoId() + "',";
+		sql += "NOMBRE=" + administrador.getNombre();
+		sql += "CORREO=" + administrador.getCorreo();
+		sql += "ROL=" + administrador.getRol();
+		sql += " WHERE ID = " + administrador.getId();
+
 
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
 		prepStmt.executeQuery();
 	}
-
 
 	/**
 	 * Metodo que elimina el video que entra como parametro en la base de datos.
@@ -160,10 +188,10 @@ public class DAOTablaEventos {
 	 * @throws SQLException - Cualquier error que la base de datos arroje. No pudo actualizar el video.
 	 * @throws Exception - Cualquier error que no corresponda a la base de datos
 	 */
-	public void deleteEvento(Evento evento) throws SQLException, Exception {
+	public void deleteAdministrador(AdministradorUs administrador) throws SQLException, Exception {
 
-		String sql = "DELETE FROM EVENTO";
-		sql += " WHERE NOMBRE = " + evento.getNombre();
+		String sql = "DELETE FROM ADMINISTRADORUS";
+		sql += " WHERE ID = " + administrador.getId();
 
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
@@ -171,5 +199,6 @@ public class DAOTablaEventos {
 	}
 
 
+	
 	
 }

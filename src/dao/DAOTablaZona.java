@@ -1,17 +1,15 @@
 package dao;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Time;
 import java.util.ArrayList;
 
-import vos.Evento;
+import vos.Zona;
 
-public class DAOTablaEventos {
-
+public class DAOTablaZona {
+	
 	/**
 	 * Arraylits de recursos que se usan para la ejecución de sentencias SQL
 	 */
@@ -26,11 +24,10 @@ public class DAOTablaEventos {
 	 * Metodo constructor que crea DAOVideo
 	 * <b>post: </b> Crea la instancia del DAO e inicializa el Arraylist de recursos
 	 */
-
-	public DAOTablaEventos(){
+	public DAOTablaZona() {
 		recursos = new ArrayList<Object>();
 	}
-	
+
 	/**
 	 * Metodo que cierra todos los recursos que estan enel arreglo de recursos
 	 * <b>post: </b> Todos los recurso del arreglo de recursos han sido cerrados
@@ -45,7 +42,7 @@ public class DAOTablaEventos {
 				}
 		}
 	}
-	
+
 	/**
 	 * Metodo que inicializa la connection del DAO a la base de datos con la conexión que entra como parametro.
 	 * @param con  - connection a la base de datos
@@ -53,7 +50,7 @@ public class DAOTablaEventos {
 	public void setConn(Connection con){
 		this.conn = con;
 	}
-
+	
 	/**
 	 * Metodo que, usando la conexión a la base de datos, saca todos los videos de la base de datos
 	 * <b>SQL Statement:</b> SELECT * FROM VIDEOS;
@@ -61,23 +58,24 @@ public class DAOTablaEventos {
 	 * @throws SQLException - Cualquier error que la base de datos arroje.
 	 * @throws Exception - Cualquier error que no corresponda a la base de datos
 	 */
-	public ArrayList<Evento> darEventos() throws SQLException, Exception {
-		ArrayList<Evento> eventos = new ArrayList<Evento>();
+	public ArrayList<Zona> darZonas() throws SQLException, Exception {
+		ArrayList<Zona> zonas = new ArrayList<Zona>();
 
-		String sql = "SELECT * FROM EVENTO";
+		String sql = "SELECT * FROM ZONA";
 
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
 		ResultSet rs = prepStmt.executeQuery();
 
 		while (rs.next()) {
-			Date fecha = rs.getDate("FECHA");
-			Time hora = rs.getTime("HORA");
 			String nombre = rs.getString("NOMBRE");
-			Integer cantidad = rs.getInt("CANTIDAD");
-			eventos.add(new Evento(fecha, hora, cantidad, nombre));
+			String condiciones = rs.getString("CONDICIONES");
+			String tipoEspacio = rs.getString("TIPOESPACIO");
+			Boolean apto = rs.getBoolean("APTO");
+			Integer capacidad = rs.getInt("CAPACIDAD");
+			zonas.add(new Zona(nombre, condiciones, tipoEspacio, apto, capacidad));
 		}
-		return eventos;
+		return zonas;
 	}
 	
 	/**
@@ -87,24 +85,25 @@ public class DAOTablaEventos {
 	 * @throws SQLException - Cualquier error que la base de datos arroje.
 	 * @throws Exception - Cualquier error que no corresponda a la base de datos
 	 */
-	public ArrayList<Evento> buscarEventosPorName(String name) throws SQLException, Exception {
-		ArrayList<Evento> eventos = new ArrayList<Evento>();
+	public ArrayList<Zona> buscarZonasPorName(String name) throws SQLException, Exception {
+		ArrayList<Zona> zonas = new ArrayList<Zona>();
 
-		String sql = "SELECT * FROM EVENTO WHERE NOMBRE ='" + name + "'";
+		String sql = "SELECT * FROM ZONA WHERE NOMBRE ='" + name + "'";
 
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
 		ResultSet rs = prepStmt.executeQuery();
 
 		while (rs.next()) {
-			Date fecha = rs.getDate("FECHA");
-			Time hora = rs.getTime("HORA");
 			String nombre = rs.getString("NOMBRE");
-			Integer cantidad = rs.getInt("CANTIDAD");
-			eventos.add(new Evento(fecha, hora, cantidad, nombre));
+			String condiciones = rs.getString("CONDICIONES");
+			String tipoEspacio = rs.getString("TIPOESPACIO");
+			Boolean apto = rs.getBoolean("APTO");
+			Integer capacidad = rs.getInt("CAPACIDAD");
+			zonas.add(new Zona(nombre, condiciones, tipoEspacio, apto, capacidad));
 		}
 
-		return eventos;
+		return zonas;
 	}
 	
 	/**
@@ -115,13 +114,14 @@ public class DAOTablaEventos {
 	 * @throws SQLException - Cualquier error que la base de datos arroje. No pudo agregar el video a la base de datos
 	 * @throws Exception - Cualquier error que no corresponda a la base de datos
 	 */
-	public void addEvento(Evento evento) throws SQLException, Exception {
+	public void addZona(Zona zona) throws SQLException, Exception {
 
-		String sql = "INSERT INTO EVENTO VALUES (";
-		sql += evento.getFecha() + ",'";
-		sql += evento.getHora() + "',";
-		sql += evento.getCantidad() + "',";
-		sql += evento.getNombre() + ")";
+		String sql = "INSERT INTO ZONA VALUES (";
+		sql += zona.getNombre() + ",'";
+		sql += zona.getCondiciones() + "',";
+		sql += zona.getTipoEspacio() + "',";
+		sql += zona.isApto() + "',";
+		sql += zona.getCapacidad() + ")";
 
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
@@ -137,20 +137,20 @@ public class DAOTablaEventos {
 	 * @throws SQLException - Cualquier error que la base de datos arroje. No pudo actualizar el video.
 	 * @throws Exception - Cualquier error que no corresponda a la base de datos
 	 */
-	public void updateEvento(Evento evento) throws SQLException, Exception {
+	public void updateZona(Zona zona) throws SQLException, Exception {
 
-		String sql = "UPDATE EVENTO SET ";
-		sql += "FECHA='" + evento.getFecha() + "',";
-		sql += "HORA=" + evento.getHora();
-		sql += "CANTIDAD=" + evento.getCantidad();
-		sql += " WHERE NOMBRE = " + evento.getNombre();
-		
+		String sql = "UPDATE ZONA SET ";
+		sql += "CONDICIONES='" + zona.getCondiciones() + "',";
+		sql += "TIPOESPACIO=" + zona.getTipoEspacio();
+		sql += "APTO=" + zona.isApto();
+		sql += "CAPACIDAD=" + zona.getCapacidad();
+		sql += " WHERE NOMBRE = " + zona.getNombre();
+
 
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
 		prepStmt.executeQuery();
 	}
-
 
 	/**
 	 * Metodo que elimina el video que entra como parametro en la base de datos.
@@ -160,16 +160,20 @@ public class DAOTablaEventos {
 	 * @throws SQLException - Cualquier error que la base de datos arroje. No pudo actualizar el video.
 	 * @throws Exception - Cualquier error que no corresponda a la base de datos
 	 */
-	public void deleteEvento(Evento evento) throws SQLException, Exception {
+	public void deleteVideo(Zona zona) throws SQLException, Exception {
 
-		String sql = "DELETE FROM EVENTO";
-		sql += " WHERE NOMBRE = " + evento.getNombre();
+		String sql = "DELETE FROM ZONA";
+		sql += " WHERE NOMBRE = " + zona.getNombre();
 
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
 		prepStmt.executeQuery();
 	}
 
-
+	
+	
+	
+	
+	
 	
 }
