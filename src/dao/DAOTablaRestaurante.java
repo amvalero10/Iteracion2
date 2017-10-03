@@ -202,7 +202,7 @@ public class DAOTablaRestaurante {
 	 * @throws SQLException - Cualquier error que la base de datos arroje. No pudo actualizar el restaurante.
 	 * @throws Exception - Cualquier error que no corresponda a la base de datos
 	 */
-	public void updateVideo(Restaurante restaurante) throws SQLException, Exception {
+	public void updateRestaurante(Restaurante restaurante) throws SQLException, Exception {
 
 		String sql = "UPDATE RESTAURANTES SET ";
 		sql += "NOMBRE='" + restaurante.getNombre() + "',";
@@ -236,7 +236,7 @@ public class DAOTablaRestaurante {
 	 * @throws SQLException - Cualquier error que la base de datos arroje.
 	 * @throws Exception - Cualquier error que no corresponda a la base de datos
 	 */
-	public void deleteVideo(Restaurante restaurante) throws SQLException, Exception {
+	public void deleteRestaurante(Restaurante restaurante) throws SQLException, Exception {
 
 		String sql = "DELETE FROM RESTAURANTES";
 		sql += " WHERE ID = " + restaurante.getId();
