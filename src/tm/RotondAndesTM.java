@@ -5,8 +5,11 @@ import java.io.FileInputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+import dao.DAOTablaRestaurante;
+import vos.Restaurante;
 
 
 
@@ -116,5 +119,297 @@ public class RotondAndesTM {
 	
 	
 	
+	/**
+	 * Metodo que modela la transaccion que retorna todos los restaurantes de la base de datos.
+	 * @return ListaRestaurantes - objeto que modela  un arreglo de restaurantes. este arreglo contiene el resultado de la busqueda
+	 * @throws Exception -  cualquier error que se genere durante la transaccion
+	 */
+	public List<Restaurante> darRestaurantes() throws Exception {
+		List<Restaurante> restaurantes;
+		DAOTablaRestaurante daoRestaurante = new DAOTablaRestaurante();
+		try 
+		{
+			//////transaccion
+			this.conn = darConexion();
+			daoRestaurante.setConn(conn);
+			restaurantes = daoRestaurante.darRestaurantes();
 
+		} catch (SQLException e) {
+			System.err.println("SQLException:" + e.getMessage());
+			e.printStackTrace();
+			throw e;
+		} catch (Exception e) {
+			System.err.println("GeneralException:" + e.getMessage());
+			e.printStackTrace();
+			throw e;
+		} finally {
+			try {
+				daoRestaurante.cerrarRecursos();
+				if(this.conn!=null)
+					this.conn.close();
+			} catch (SQLException exception) {
+				System.err.println("SQLException closing resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+		return restaurantes;
+	}
+	
+	
+	
+	/**
+	 * Metodo que modela la transaccion que busca el/los restaurantes en la base de datos con el nombre entra como parametro.
+	 * @param name - Nombre del restaurante a buscar. name != null
+	 * @return ListaRestaurantes - objeto que modela  un arreglo de restaurantes. este arreglo contiene el resultado de la busqueda
+	 * @throws Exception -  cualquier error que se genere durante la transaccion
+	 */
+	public List<Restaurante> buscarRestaurantePorName(String name) throws Exception {
+		List<Restaurante> restaurantes;
+		DAOTablaRestaurante daoRestaurantes = new DAOTablaRestaurante();
+		try 
+		{
+			//////transaccion
+			this.conn = darConexion();
+			daoRestaurantes.setConn(conn);
+			restaurantes = daoRestaurantes.buscarRestauratePorName(name);
+
+		} catch (SQLException e) {
+			System.err.println("SQLException:" + e.getMessage());
+			e.printStackTrace();
+			throw e;
+		} catch (Exception e) {
+			System.err.println("GeneralException:" + e.getMessage());
+			e.printStackTrace();
+			throw e;
+		} finally {
+			try {
+				daoRestaurantes.cerrarRecursos();
+				if(this.conn!=null)
+					this.conn.close();
+			} catch (SQLException exception) {
+				System.err.println("SQLException closing resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+		return restaurantes;
+	}
+	
+	
+	
+	
+	/**
+	 * Metodo que modela la transaccion que busca el restaurante en la base de datos con el id que entra como parametro.
+	 * @param name - Id del restaurante a buscar. name != null
+	 * @return restaurante - Resultado de la busqueda
+	 * @throws Exception -  cualquier error que se genere durante la transaccion
+	 */
+	public Restaurante buscarRestaurantePorId(Long id) throws Exception {
+		Restaurante restaurante;
+		DAOTablaRestaurante daoRestaurantes = new DAOTablaRestaurante();
+		try 
+		{
+			//////transaccion
+			this.conn = darConexion();
+			daoRestaurantes.setConn(conn);
+			restaurante = daoRestaurantes.buscarRestaurantePorId(id);
+
+		} catch (SQLException e) {
+			System.err.println("SQLException:" + e.getMessage());
+			e.printStackTrace();
+			throw e;
+		} catch (Exception e) {
+			System.err.println("GeneralException:" + e.getMessage());
+			e.printStackTrace();
+			throw e;
+		} finally {
+			try {
+				daoRestaurantes.cerrarRecursos();
+				if(this.conn!=null)
+					this.conn.close();
+			} catch (SQLException exception) {
+				System.err.println("SQLException closing resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+		return restaurante;
+	}
+	
+	
+	
+	
+	/**
+	 * Metodo que modela la transaccion que agrega un solo Restaurante a la base de datos.
+	 * <b> post: </b> se ha agregado el Restaurante que entra como parametro
+	 * @param Restaurante - el Restaurante a agregar. Restaurante != null
+	 * @throws Exception - cualquier error que se genere agregando el Restaurante
+	 */
+	public void addRestaurante(Restaurante restaurante) throws Exception {
+		DAOTablaRestaurante daoRestaurantes = new DAOTablaRestaurante();
+		try 
+		{
+			//////transaccion
+			this.conn = darConexion();
+			daoRestaurantes.setConn(conn);
+			daoRestaurantes.addRestaurante(restaurante);
+			conn.commit();
+
+		} catch (SQLException e) {
+			System.err.println("SQLException:" + e.getMessage());
+			e.printStackTrace();
+			throw e;
+		} catch (Exception e) {
+			System.err.println("GeneralException:" + e.getMessage());
+			e.printStackTrace();
+			throw e;
+		} finally {
+			try {
+				daoRestaurantes.cerrarRecursos();
+				if(this.conn!=null)
+					this.conn.close();
+			} catch (SQLException exception) {
+				System.err.println("SQLException closing resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+	}
+	
+	
+	/**
+	 * Metodo que modela la transaccion que agrega los Restaurantes que entran como parametro a la base de datos.
+	 * <b> post: </b> se han agregado los Restaurantes que entran como parametro
+	 * @param Restaurante - objeto que modela una lista de Restaurantes y se estos se pretenden agregar. Restaurantes != null
+	 * @throws Exception - cualquier error que se genera agregando los videos
+	 */
+	public void addRestaurantes(List<Restaurante> restaurantes) throws Exception {
+		DAOTablaRestaurante daoRestaurantes = new DAOTablaRestaurante();
+		try 
+		{
+			//////transaccion - ACID Example
+			this.conn = darConexion();
+			conn.setAutoCommit(false);
+			daoRestaurantes.setConn(conn);
+			Iterator<Restaurante> it = restaurantes.iterator();
+			while(it.hasNext())
+			{
+				daoRestaurantes.addRestaurante(it.next());
+			}
+			
+			conn.commit();
+		} catch (SQLException e) {
+			System.err.println("SQLException:" + e.getMessage());
+			e.printStackTrace();
+			conn.rollback();
+			throw e;
+		} catch (Exception e) {
+			System.err.println("GeneralException:" + e.getMessage());
+			e.printStackTrace();
+			conn.rollback();
+			throw e;
+		} finally {
+			try {
+				daoRestaurantes.cerrarRecursos();
+				if(this.conn!=null)
+					this.conn.close();
+			} catch (SQLException exception) {
+				System.err.println("SQLException closing resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+	}
+	
+	
+	
+	
+	
+	
+	/**
+	 * Metodo que modela la transaccion que actualiza el Restaurante que entra como parametro a la base de datos.
+	 * <b> post: </b> se ha actualizado el Restaurante que entra como parametro
+	 * @param Restaurante - Restaurante a actualizar. Restaurante != null
+	 * @throws Exception - cualquier error que se genera actualizando
+	 */
+	public void updateRestaurante(Restaurante restaurante) throws Exception {
+		DAOTablaRestaurante daoRestaurante = new DAOTablaRestaurante();
+		try 
+		{
+			//////transaccion
+			this.conn = darConexion();
+			daoRestaurante.setConn(conn);
+			daoRestaurante.updateVideo(restaurante);
+
+		} catch (SQLException e) {
+			System.err.println("SQLException:" + e.getMessage());
+			e.printStackTrace();
+			throw e;
+		} catch (Exception e) {
+			System.err.println("GeneralException:" + e.getMessage());
+			e.printStackTrace();
+			throw e;
+		} finally {
+			try {
+				daoRestaurante.cerrarRecursos();
+				if(this.conn!=null)
+					this.conn.close();
+			} catch (SQLException exception) {
+				System.err.println("SQLException closing resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	/**
+	 * Metodo que modela la transaccion que elimina el Restaurante que entra como parametro a la base de datos.
+	 * <b> post: </b> se ha eliminado el Restaurante que entra como parametro
+	 * @param Restaurante - Restaurante a eliminar. Restaurante != null
+	 * @throws Exception - cualquier error que se genera.
+	 */
+	public void deleteRestaurante(Restaurante restaurante) throws Exception {
+		DAOTablaRestaurante daoRestaurante = new DAOTablaRestaurante();
+		try 
+		{
+			//////transaccion
+			this.conn = darConexion();
+			daoRestaurante.setConn(conn);
+			daoRestaurante.deleteVideo(restaurante);
+
+		} catch (SQLException e) {
+			System.err.println("SQLException:" + e.getMessage());
+			e.printStackTrace();
+			throw e;
+		} catch (Exception e) {
+			System.err.println("GeneralException:" + e.getMessage());
+			e.printStackTrace();
+			throw e;
+		} finally {
+			try {
+				daoRestaurante.cerrarRecursos();
+				if(this.conn!=null)
+					this.conn.close();
+			} catch (SQLException exception) {
+				System.err.println("SQLException closing resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 }
